@@ -4,7 +4,8 @@ var CONFIGS = {
 	width: 800,
 	height: 600,
 	scene: [
-		SampleScene
+		SampleSceneES6,
+		SampleSceneES5,
 	]
 };
 

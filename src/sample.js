@@ -1,9 +1,9 @@
 
-var SampleScene = new Phaser.Class({
+var SampleSceneES5 = new Phaser.Class({
 	Extends: Phaser.Scene,
 
 	initialize: function SampleScene() {
-		Phaser.Scene.call(this, { key: 'Sample' });
+		Phaser.Scene.call(this, { key: 'SampleSceneES5' });
 	},
 
 	preload: function() {
@@ -21,7 +21,39 @@ var SampleScene = new Phaser.Class({
 			yoyo: true,
 			loop: -1
 		});
-		console.log('Create Sample');
+		
+		this.input.once("pointerdown", function() {
+			this.scene.start('SampleSceneES6');
+		}, this);
+		console.log('Create SampleSceneES5');
 	}
 
 });
+
+class SampleSceneES6 extends Phaser.Scene {
+	constructor() {
+		super({ key: 'SampleSceneES6' });
+	}
+
+	preload() {
+		this.load.image('logo', 'assets/logo.png');
+	}
+
+	create() {
+		var logo = this.add.image(400, 150, 'logo');
+
+		this.tweens.add({
+			targets: logo,
+			y: 450,
+			duration: 2000,
+			ease: 'Power2',
+			yoyo: true,
+			loop: -1
+		});
+
+		this.input.once("pointerdown", () => {
+			this.scene.start('SampleSceneES5');
+		});
+		console.log('Create SampleSceneES6');
+	}
+}

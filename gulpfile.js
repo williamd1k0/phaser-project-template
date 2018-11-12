@@ -1,7 +1,8 @@
 
 var gulp = require('gulp'),
 	plumber = require('gulp-plumber'),
-	uglify = require('gulp-uglify'),
+	babel = require("gulp-babel"),
+	minify = require("gulp-babel-minify"),
 	concat = require('gulp-concat'),
 	sourcemaps = require('gulp-sourcemaps'),
 	download = require("gulp-download"),
@@ -14,37 +15,42 @@ var dist = (argv.dist === undefined) ? false : true;
 var js_sources = [
 	'src/**/*.js'
 ];
+var babel_presets = {"presets": [
+	["env", {
+	  "targets": {
+		"browsers": [ ">0.25%", "not op_mini all"]
+	  }
+	}]
+]};
 
 var dist_path = dist ? 'build/dist/' : 'build/dev/';
 var assets_path = dist ? 'build/dist/assets/' : 'build/dev/assets/';
 
 var phaser = require('./package.json').phaser;
 var phaser_cdn = `https://cdn.jsdelivr.net/gh/photonstorm/phaser@${phaser}/dist/phaser.js`;
+var phasermin_cdn = `https://cdn.jsdelivr.net/gh/photonstorm/phaser@${phaser}/dist/phaser.min.js`;
 var phaser_defs = 'https://github.com/photonstorm/phaser3-docs/raw/master/typescript/phaser.d.ts';
 
 gulp.task('js', function() {
 	if (dist) {
-		gulp.src('phaser/*.js')
-			.pipe(plumber())
-			.pipe(concat('phaser.js'))
-			.pipe(uglify())
-			.pipe(gulp.dest(dist_path));
+		fs.createReadStream('phaser/phaser.min.js')
+			.pipe(fs.createWriteStream(dist_path+'phaser.js'));
 			
 		gulp.src(js_sources)
 			.pipe(plumber())
 			.pipe(concat('main.js'))
-			.pipe(uglify())
+			.pipe(babel(babel_presets))
+			.pipe(minify())
 			.pipe(gulp.dest(dist_path));
 	} else {
-		gulp.src('phaser/*.js')
-			.pipe(plumber())
-			.pipe(concat('phaser.js'))
+		gulp.src('phaser/phaser.js')
 			.pipe(gulp.dest(dist_path));
 
 		gulp.src(js_sources)
 			.pipe(plumber())
 			.pipe(sourcemaps.init())
 				.pipe(concat('main.js'))
+				.pipe(babel(babel_presets))
 			.pipe(sourcemaps.write('.'))
 			.pipe(gulp.dest(dist_path))
 			.pipe(browser_sync.reload({stream:true}));
@@ -77,6 +83,8 @@ gulp.task('watch', function() {
 
 gulp.task('update', function() {
 	download(phaser_cdn)
+		.pipe(gulp.dest('phaser/'));
+	download(phasermin_cdn)
 		.pipe(gulp.dest('phaser/'));
 	download(phaser_defs)
 		.pipe(gulp.dest('typings/'));
