@@ -1,7 +1,11 @@
 # Vendors
 node_modules/
+package-lock.json
 
 # Build
 build/
 /npm-debug.log
 
+# Phaser
+phaser/
+typings/
