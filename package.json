@@ -1,0 +1,20 @@
+{
+  "name": "phaser-project-template",
+  "version": "1.0.0",
+  "phaser": "3.15.1",
+  "scripts": {
+    "build": "gulp build --dist",
+    "start": "gulp"
+  },
+  "devDependencies": {
+    "gulp": "3.9.1",
+    "run-sequence": "^2.2.1",
+    "gulp-concat": "^2.4.3",
+    "gulp-plumber": "^0.6.6",
+    "gulp-uglify": "^1.0.2",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-download": "^0.0.1",
+    "yargs": "^12.0.2",
+    "browser-sync": "^2.26.3"
+  }
+}
