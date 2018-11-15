@@ -18,7 +18,7 @@ var js_sources = [
 var babel_presets = {"presets": [
 	["env", {
 	  "targets": {
-		"browsers": [ ">0.25%", "not op_mini all"]
+		"browsers": [ ">0.1%"],
 	  }
 	}]
 ]};
@@ -32,10 +32,16 @@ var phasermin_cdn = `https://cdn.jsdelivr.net/gh/photonstorm/phaser@${phaser}/di
 var phaser_defs = 'https://github.com/photonstorm/phaser3-docs/raw/master/typescript/phaser.d.ts';
 
 gulp.task('js', function() {
+	if (!fs.existsSync('build')) {
+		fs.mkdirSync('build');
+	}
 	if (dist) {
+		if (!fs.existsSync(dist_path)) {
+			fs.mkdirSync(dist_path);
+		}
 		fs.createReadStream('phaser/phaser.min.js')
 			.pipe(fs.createWriteStream(dist_path+'phaser.js'));
-			
+
 		gulp.src(js_sources)
 			.pipe(plumber())
 			.pipe(concat('main.js'))
